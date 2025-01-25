@@ -1,0 +1,7 @@
+.env
+.vscode/
+*.pyc
+migrations/versions/*
+!migrations/versions/.gitkeep
+mig.py
+query.py
