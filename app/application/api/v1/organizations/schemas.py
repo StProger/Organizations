@@ -2,6 +2,7 @@ from typing import Any
 import uuid
 from pydantic import BaseModel
 
+from domain.entities.buildings import Buildings
 from domain.entities.organizations import Organization
 
 
@@ -24,3 +25,22 @@ class OrganizationResponseSchema(BaseModel):
         )
 
 ListOrganizationResponseSchema = list[OrganizationResponseSchema]
+
+
+class BuildingResponseSchema(BaseModel):
+
+    pk: uuid.UUID
+    address: str
+    latitude: float
+    longitude: float
+
+    @classmethod
+    def from_entity(cls, entity: Buildings) -> "BuildingResponseSchema":
+        return BuildingResponseSchema(
+            pk=entity.pk,
+            address=entity.address,
+            latitude=entity.latitude,
+            longitude=entity.longitude
+        )
+
+ListBuildingReponseSchema = list[BuildingResponseSchema]

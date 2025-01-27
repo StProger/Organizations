@@ -77,9 +77,13 @@ def upgrade() -> None:
 
     activity1 = Activity(name="Еда")
     activity2 = Activity(name="Автомобили")
+    activity1_2 = Activity(name="Молочная продукция", parent_pk=activity1.pk)
+    activity1_3 = Activity(name="Производство сыра", parent_pk=activity1.pk)
     activity3 = Activity(name="Мясная продукция", parent_pk=activity1.pk)
     
     session.add(activity1)
+    session.add(activity1_2)
+    session.add(activity1_3)
     session.add(activity2)
     session.add(activity3)
 
@@ -100,6 +104,10 @@ def upgrade() -> None:
 
     session.commit()
     organization1.activities.append(activity1)
+    organization1.activities.append(activity1_2)
+    organization1.activities.append(activity1_3)
+    organization2.activities.append(activity1)
+    organization2.activities.append(activity1_2)
     organization2.activities.append(activity2)
     organization2.activities.append(activity3)
 
