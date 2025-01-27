@@ -1,12 +1,14 @@
 DC = docker-compose
-STORAGES_FILE = docker_compose/storages.yaml
-APP_FILE = docker_compose/app.yaml
+STORAGES_FILE = docker_compose/storages.yml
+APP_FILE = docker_compose/app.yml
 APP_CONTAINER = main-app
 EXEC = docker exec -it
 DB_CONTAINER = organizations-db
 LOGS = docker logs
 ENV_FILE = --env-file .env
-MANAGEPY = python manage.py
+ALEMBIC_REVISION = alembic revision --autogenerate
+ALEMBIC_UPGRADE = alembic upgrade head
+
 
 .PHONY: storages
 storages:
@@ -24,7 +26,6 @@ postgres:
 storages-logs:
 	${LOGS} ${DB_CONTAINER} -f
 
-
 .PHONY: app
 app:
 	${DC} -f ${STORAGES_FILE} -f ${APP_FILE} ${ENV_FILE} up -d --build
@@ -39,18 +40,8 @@ app-down:
 
 .PHONY: migrate
 migrate:
-	${EXEC} ${APP_CONTAINER} ${MANAGEPY} migrate
-
+	${EXEC} ${APP_CONTAINER} ${ALEMBIC_UPGRADE}
 
 .PHONY: migrations
 migrations:
-	${EXEC} ${APP_CONTAINER} ${MANAGEPY} makemigrations
-
-
-.PHONY: superuser
-superuser:
-	${EXEC} ${APP_CONTAINER} ${MANAGEPY} createsuperuser
-
-.PHONY: collectstatic
-collectstatic:
-	${EXEC} ${APP_CONTAINER} ${MANAGEPY} collectstatic
+	${EXEC} ${APP_CONTAINER} ${ALEMBIC_REVISION} 
